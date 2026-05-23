@@ -1,3 +1,7 @@
+#ifndef ARVORE_H
+#define ARVORE_H
+#include "livro.h"
+
 typedef struct NoArvore {
     Livro * livro ;
     struct NoArvore * esquerda ;
@@ -7,3 +11,5 @@ typedef struct NoArvore {
 typedef struct Arvore {
     NoArvore * raiz ;
 } Arvore ;
+
+#endif
