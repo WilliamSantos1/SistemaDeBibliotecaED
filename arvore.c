@@ -1,13 +1,12 @@
 #include <stdlib.h>
 #include "arvore.h"
-
 #include <stdio.h>
 
 Arvore * criarArvore() {
     Arvore * arvore = (Arvore *) malloc(sizeof(Arvore));
 
     if (arvore == NULL) {
-        printf("Erro ao criar arvore\n");
+        printf("[Erro ao criar arvore.]\n");
         return NULL;
     }
     arvore->raiz = NULL;
@@ -16,13 +15,18 @@ Arvore * criarArvore() {
 
 void inserirLivroArvore ( Arvore * arvore , Livro * livro ) {
     if (arvore == NULL || livro == NULL) {
-        printf("dados de livro ou arvore inválidos\n");
+        printf("[Dados de livro ou arvore inválidos.]\n");
         return;
     }
+
+    //{conversar para ver se isso faz sentido ou deve ser posto fora da função}
+    //buscar livro na arvore para verificar se ele ja existe;
+
+
     NoArvore * novo = malloc(sizeof(NoArvore));
 
     if (novo == NULL) {
-        printf("Erro ao alocar no\n");
+        printf("[Erro ao alocar memória para o livro.]\n");
         return;
     }
 
@@ -30,66 +34,132 @@ void inserirLivroArvore ( Arvore * arvore , Livro * livro ) {
     novo->esquerda = NULL;
     novo->direita = NULL;
 
-    // árvore vazia
+    // nó vazio ou arvore vazia
     if (arvore->raiz == NULL) {
         arvore->raiz = novo;
+        printf("[Livro adicionado ao acervo da biblioteca com sucesso!]\n");
         return;
     }
-    //arvore com livros
+    free(novo);
 
-    NoArvore * atual = arvore->raiz;
-    NoArvore * pai = NULL;
+    //arvore com livros, repetir a função dependendo do valor do código
 
-    //organizando de acordo com o valor do código
-    while (atual != NULL) {
-        pai = atual;
-        if (livro->codigo < atual->livro->codigo) {
-            atual = atual->esquerda;
-        }
-        else if (livro->codigo > atual->livro->codigo) {
-            atual = atual->direita;
-        }
-        else {
-            // código repetido
-            printf("Livro com codigo ja existe\n");
-            free(novo);
-            return;
-        }
+    if (livro->codigo < arvore->raiz->livro->codigo) {
+
+        Arvore noEsq;
+        noEsq.raiz = arvore->raiz->esquerda;
+        inserirLivroArvore(&noEsq,livro);
+
+        arvore->raiz->esquerda = noEsq.raiz;
+    }else {
+
+        Arvore noDir;
+        noDir.raiz = arvore->raiz->direita;
+        inserirLivroArvore(&noDir,livro);
+
+        arvore->raiz->direita = noDir.raiz;
     }
-    //definindo a posição do livro
-
-    if (livro->codigo < pai->livro->codigo)
-        pai->esquerda = novo;
-    else
-        pai->direita = novo;
-}
-
-Livro * buscarNo(NoArvore * no, int codigo) {
-
-    if (no == NULL)
-        return NULL;
-
-    if (no->livro->codigo == codigo)
-        return no->livro;
-
-    if (codigo < no->livro->codigo)
-        return buscarNo(no->esquerda, codigo);
-
-    return buscarNo(no->direita, codigo);
 }
 
 Livro * buscarLivroArvore ( Arvore * arvore , int codigo ) {
-    //arvore vazia ou com apenas um elemento
-    if (arvore->raiz == NULL || arvore->raiz->codigo == codigo) {
+    if (arvore->raiz == NULL) {
+        printf("[livro nao existente ou arvore vazia.]\n");
+        return NULL;
+    }
+    if (arvore->raiz->livro->codigo == codigo) {
         return arvore->raiz->livro;
     }
-    return buscarNo(arvore->raiz, codigo);
+    Arvore noEsq;
+    noEsq.raiz = arvore->raiz->esquerda;
+    Arvore noDir;
+    noDir.raiz = arvore->raiz->direita;
 
+    if (codigo < arvore->raiz->livro->codigo) {
+        return buscarLivroArvore(&noEsq,codigo);
+    }else {
+        return buscarLivroArvore(&noDir,codigo);
     }
 
 }
-void listarLivrosEmOrdem ( Arvore * arvore ) ;
-void listarLivrosPreOrdem ( Arvore * arvore ) ;
-void listarLivrosPosOrdem ( Arvore * arvore ) ;
-int contarLivros ( Arvore * arvore ) ;
-int calcularAlturaArvore ( Arvore * arvore ) ;
+
+void listarLivrosEmOrdem ( Arvore * arvore ) {
+
+    if (arvore->raiz != NULL) {
+        //primeiro nó esquerdo
+        Arvore  noEsq;
+        noEsq.raiz = arvore->raiz->esquerda;
+        listarLivrosEmOrdem(&noEsq);
+
+        //nó do meio
+        printf("[%d][%s]\n",arvore->raiz->livro->codigo,arvore->raiz->livro->titulo);
+
+        //nó da direita
+        Arvore noDir;
+        noDir.raiz = arvore->raiz->direita;
+        listarLivrosEmOrdem(&noDir);
+    }
+}
+
+void listarLivrosPreOrdem ( Arvore * arvore ) {
+    if (arvore->raiz != NULL) {
+        //nó do meio
+        printf("[%d][%s]\n",arvore->raiz->livro->codigo,arvore->raiz->livro->titulo);
+
+        // nó esquerdo
+        Arvore  noEsq;
+        noEsq.raiz = arvore->raiz->esquerda;
+        listarLivrosPreOrdem(&noEsq);
+
+        //nó da direita
+        Arvore noDir;
+        noDir.raiz = arvore->raiz->direita;
+        listarLivrosPreOrdem(&noDir);
+    }
+}
+void listarLivrosPosOrdem ( Arvore * arvore ) {
+    if (arvore->raiz != NULL) {
+        // nó esquerdo
+        Arvore  noEsq;
+        noEsq.raiz = arvore->raiz->esquerda;
+        listarLivrosPosOrdem(&noEsq);
+
+        //nó da direita
+        Arvore noDir;
+        noDir.raiz = arvore->raiz->direita;
+        listarLivrosPosOrdem(&noDir);
+
+        //nó do meio
+        printf("[%d][%s]\n",arvore->raiz->livro->codigo,arvore->raiz->livro->titulo);
+    }
+}
+int contarLivros ( Arvore * arvore ) {
+    if (arvore->raiz == NULL) {
+        return 0;
+    }
+    Arvore noEsq;
+    noEsq.raiz = arvore->raiz->esquerda;
+    Arvore noDir;
+    noDir.raiz = arvore->raiz->direita;
+
+    return 1
+    + contarLivros(&noEsq)
+    + contarLivros(&noDir);
+}
+int calcularAlturaArvore ( Arvore * arvore ) {
+    if (arvore->raiz == NULL) {
+        return -1;
+    }
+    Arvore noEsq;
+    noEsq.raiz = arvore->raiz->esquerda;
+    Arvore noDir;
+    noDir.raiz = arvore->raiz->direita;
+
+    int alturaEsquerda = calcularAlturaArvore(&noEsq);
+    int alturaDireita = calcularAlturaArvore(&noDir);
+
+    if (alturaEsquerda > alturaDireita) {
+        return alturaEsquerda + 1;
+    }else {
+        return alturaDireita + 1;
+    }
+}
