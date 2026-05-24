@@ -13,6 +13,7 @@ int main(void) {
     Livro *livro5 = criarLivro(0,"Thaeon do bts","vivi",2026,1);
     Arvore * arvore;
     arvore = criarArvore();
+    //antes de inserir precisa buscar o livro para ver se ele já não está na biblioteca
     inserirLivroArvore(arvore, livro);
     inserirLivroArvore(arvore, livro2);
     inserirLivroArvore(arvore, livro3);
