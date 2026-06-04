@@ -13,54 +13,6 @@ Arvore * criarArvore() {
     return arvore;
 }
 
-void inserirLivroArvore ( Arvore * arvore , Livro * livro ) {
-    if (arvore == NULL || livro == NULL) {
-        printf("[Dados de livro ou arvore inválidos.]\n");
-        return;
-    }
-
-    //{conversar para ver se isso faz sentido ou deve ser posto fora da função}
-    //buscar livro na arvore para verificar se ele ja existe;
-
-
-    NoArvore * novo = malloc(sizeof(NoArvore));
-
-    if (novo == NULL) {
-        printf("[Erro ao alocar memória para o livro.]\n");
-        return;
-    }
-
-    novo->livro = livro;
-    novo->esquerda = NULL;
-    novo->direita = NULL;
-
-    // nó vazio ou arvore vazia
-    if (arvore->raiz == NULL) {
-        arvore->raiz = novo;
-        printf("[Livro adicionado ao acervo da biblioteca com sucesso!]\n");
-        return;
-    }
-    free(novo);
-
-    //arvore com livros, repetir a função dependendo do valor do código
-
-    if (livro->codigo < arvore->raiz->livro->codigo) {
-
-        Arvore noEsq;
-        noEsq.raiz = arvore->raiz->esquerda;
-        inserirLivroArvore(&noEsq,livro);
-
-        arvore->raiz->esquerda = noEsq.raiz;
-    }else {
-
-        Arvore noDir;
-        noDir.raiz = arvore->raiz->direita;
-        inserirLivroArvore(&noDir,livro);
-
-        arvore->raiz->direita = noDir.raiz;
-    }
-}
-
 Livro * buscarLivroArvore ( Arvore * arvore , int codigo ) {
     if (arvore->raiz == NULL) {
         printf("[livro nao existente ou arvore vazia.]\n");
@@ -161,5 +113,94 @@ int calcularAlturaArvore ( Arvore * arvore ) {
         return alturaEsquerda + 1;
     }else {
         return alturaDireita + 1;
+    }
+}
+
+int fatorBalanceamento(Arvore *arvore) {
+    if (arvore->raiz == NULL) {
+        return 0;
+    }
+
+    Arvore noEsq;
+    noEsq.raiz = arvore->raiz->esquerda;
+
+    Arvore noDir;
+    noDir.raiz = arvore->raiz->direita;
+
+    int alturaEsquerda = calcularAlturaArvore(&noEsq);
+    int alturaDireita = calcularAlturaArvore(&noDir);
+
+    return alturaEsquerda - alturaDireita;
+}
+void rotacaoDireita(Arvore *arvore) {
+    NoArvore *novaRaiz = arvore->raiz->esquerda;
+    NoArvore *subArvore = novaRaiz->direita;
+
+    novaRaiz->direita = arvore->raiz;
+    arvore->raiz->esquerda = subArvore;
+
+    arvore->raiz = novaRaiz;
+}
+void rotacaoEsquerda(Arvore *arvore) {
+    NoArvore *novaRaiz = arvore->raiz->direita;
+    NoArvore *subArvore = novaRaiz->esquerda;
+
+    novaRaiz->esquerda = arvore->raiz;
+    arvore->raiz->direita = subArvore;
+
+    arvore->raiz = novaRaiz;
+}
+
+void inserirLivroArvore ( Arvore * arvore , Livro * livro ) {
+    if (arvore == NULL || livro == NULL) {
+        printf("[Dados de livro ou arvore inválidos.]\n");
+        return;
+    }
+
+    NoArvore * novo = malloc(sizeof(NoArvore));
+
+    if (novo == NULL) {
+        printf("[Erro ao alocar memória para o livro.]\n");
+        return;
+    }
+
+    novo->livro = livro;
+    novo->esquerda = NULL;
+    novo->direita = NULL;
+
+    // nó vazio ou arvore vazia
+    if (arvore->raiz == NULL) {
+        arvore->raiz = novo;
+        printf("[Livro adicionado ao acervo da biblioteca com sucesso!]\n");
+
+        //verificar balanceamento
+        int altura = fatorBalanceamento(arvore);
+        if (altura < -1) {
+            //no da direita maior
+            rotacaoEsquerda(arvore);
+        }else if ( altura > 1) {
+            //no da esquerda maior
+            rotacaoDireita(arvore);
+        }
+        return;
+    }
+    free(novo);
+
+    //arvore com livros, repetir a função dependendo do valor do código
+
+    if (livro->codigo < arvore->raiz->livro->codigo) {
+
+        Arvore noEsq;
+        noEsq.raiz = arvore->raiz->esquerda;
+        inserirLivroArvore(&noEsq,livro);
+
+        arvore->raiz->esquerda = noEsq.raiz;
+    }else {
+
+        Arvore noDir;
+        noDir.raiz = arvore->raiz->direita;
+        inserirLivroArvore(&noDir,livro);
+
+        arvore->raiz->direita = noDir.raiz;
     }
 }
