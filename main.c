@@ -6,11 +6,11 @@
 
 int main(void) {
 
-    Livro *livro = criarLivro(3,"joaozinho gamer","johon",1999,1);
-    Livro *livro2 = criarLivro(1,"joaozinho que brincou com robo","jonas",1998,1);
-    Livro *livro3 = criarLivro(2,"matematica","joao",1300,1);
+    Livro *livro = criarLivro(1,"joaozinho gamer","johon",1999,1);
+    Livro *livro2 = criarLivro(2,"joaozinho que brincou com robo","jonas",1998,1);
+    Livro *livro3 = criarLivro(3,"matematica","joao",1300,1);
     Livro *livro4 = criarLivro(4,"portugues","joao",1300,1);
-    Livro *livro5 = criarLivro(0,"Thaeon do bts","vivi",2026,1);
+    Livro *livro5 = criarLivro(5,"Thaeon do bts","vivi",2026,1);
     Arvore * arvore;
     arvore = criarArvore();
     //antes de inserir precisa buscar o livro para ver se ele já não está na biblioteca
@@ -20,12 +20,13 @@ int main(void) {
     inserirLivroArvore(arvore, livro4);
     inserirLivroArvore(arvore, livro5);
 
-    Livro *busca = buscarLivroArvore(arvore,0);
+    Livro *busca = buscarLivroArvore(arvore,5);
     if (busca != NULL) {
         exibirLivro(busca);
     }
     int quant = contarLivros(arvore);
     int altura = calcularAlturaArvore(arvore);
+    
     printf("\nquantidade de livros: %d \n", quant);
     printf("altura da arvore: %d \n", altura);
     printf("\nlivros em ordem\n");

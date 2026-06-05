@@ -33,6 +33,14 @@ Livro * buscarLivroArvore ( Arvore * arvore , int codigo ) {
     }
 
 }
+Arvore *arvoreMenorLivroCodigo(Arvore *arvore) {
+
+    while (arvore->raiz->esquerda != NULL) {
+        arvore->raiz = arvore->raiz->esquerda;
+    }
+
+    return arvore;
+}
 
 void listarLivrosEmOrdem ( Arvore * arvore ) {
 
@@ -150,41 +158,68 @@ void rotacaoEsquerda(Arvore *arvore) {
 
     arvore->raiz = novaRaiz;
 }
+void balancearArvore(Arvore *arvore) {
 
+    //verificar balanceamento
+    int fb = fatorBalanceamento(arvore);
+
+    if (fb > 1) {
+        //ramo da esquerda maior que direita
+
+        Arvore esq;
+        esq.raiz = arvore->raiz->esquerda;
+
+        int fbEsq = fatorBalanceamento(&esq);
+
+        if (fbEsq >= 0) {
+            // LL
+            rotacaoDireita(arvore);
+        } else {
+            // LR
+            rotacaoEsquerda(&esq);
+            arvore->raiz->esquerda = esq.raiz;
+            rotacaoDireita(arvore);
+        }
+    }
+    if (fb < -1) {
+        //ramo da direita maior que o da esquerda
+        Arvore dir;
+        dir.raiz = arvore->raiz->direita;
+
+        int fbDir = fatorBalanceamento(&dir);
+
+        if (fbDir <= 0) {
+            // RR
+            rotacaoEsquerda(arvore);
+        } else {
+            // RL
+            rotacaoDireita(&dir);
+            arvore->raiz->direita = dir.raiz;
+            rotacaoEsquerda(arvore);
+        }
+    }
+}
 void inserirLivroArvore ( Arvore * arvore , Livro * livro ) {
     if (arvore == NULL || livro == NULL) {
         printf("[Dados de livro ou arvore inválidos.]\n");
         return;
     }
 
-    NoArvore * novo = malloc(sizeof(NoArvore));
-
-    if (novo == NULL) {
-        printf("[Erro ao alocar memória para o livro.]\n");
-        return;
-    }
-
-    novo->livro = livro;
-    novo->esquerda = NULL;
-    novo->direita = NULL;
-
-    // nó vazio ou arvore vazia
     if (arvore->raiz == NULL) {
-        arvore->raiz = novo;
-        printf("[Livro adicionado ao acervo da biblioteca com sucesso!]\n");
+        NoArvore *novo = malloc(sizeof(NoArvore));
 
-        //verificar balanceamento
-        int altura = fatorBalanceamento(arvore);
-        if (altura < -1) {
-            //no da direita maior
-            rotacaoEsquerda(arvore);
-        }else if ( altura > 1) {
-            //no da esquerda maior
-            rotacaoDireita(arvore);
+        if (novo == NULL) {
+            printf("[Erro ao alocar memória.]\n");
+            return;
         }
+
+        novo->livro = livro;
+        novo->esquerda = NULL;
+        novo->direita = NULL;
+
+        arvore->raiz = novo;
         return;
     }
-    free(novo);
 
     //arvore com livros, repetir a função dependendo do valor do código
 
@@ -202,5 +237,58 @@ void inserirLivroArvore ( Arvore * arvore , Livro * livro ) {
         inserirLivroArvore(&noDir,livro);
 
         arvore->raiz->direita = noDir.raiz;
+    }
+    balancearArvore(arvore);
+
+}
+void removerLivroArvore(Arvore * arvore , Livro * livro) {
+    if (arvore == NULL) {
+        printf("[valor não encontrado.]\n");
+        return;
+    }
+    if (livro->codigo < arvore->raiz->livro->codigo) {
+        Arvore arvoreEsq;
+        arvoreEsq.raiz = arvore->raiz->esquerda;
+        removerLivroArvore(&arvoreEsq,livro);
+    }else if (livro->codigo > arvore->raiz->livro->codigo) {
+        Arvore arvoreDir;
+        arvoreDir.raiz = arvore->raiz->direita;
+        removerLivroArvore(&arvoreDir,livro);
+    }else {
+        //encontrou o Nó
+        //caso 1 Nó sem filhos
+        if (arvore->raiz->esquerda == NULL && arvore->raiz->direita == NULL) {
+            free(arvore->raiz);
+            arvore->raiz = NULL;
+            printf("[Livro removido com sucesso.]\n");
+            return;
+        } else if (arvore->raiz->esquerda == NULL) {
+            //caso 2 Nó com um filho a direita
+            NoArvore *temp = arvore->raiz;
+            arvore->raiz = arvore->raiz->direita;
+            free(temp);
+            printf("[Livro removido com sucesso.]\n");
+            return;
+        } else if (arvore->raiz->direita == NULL) {
+            //caso 2 Nó com um filho a esquerda
+            NoArvore *temp = arvore->raiz;
+            arvore->raiz = arvore->raiz->esquerda;
+            free(temp);
+            printf("[Livro removido com sucesso.]\n");
+            return;
+        }else {
+            //caso 3 Nó com dois filhos
+            Arvore temp;
+            temp.raiz = arvore->raiz->direita;
+            Arvore *sucessor = arvoreMenorLivroCodigo(&temp);
+            arvore->raiz->livro = sucessor->raiz->livro;
+
+            Arvore dir;
+            dir.raiz = arvore->raiz->direita;
+
+            removerLivroArvore(&dir, sucessor->raiz->livro);
+
+            arvore->raiz->direita = dir.raiz;
+        }
     }
 }
