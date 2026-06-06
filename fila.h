@@ -1,6 +1,3 @@
-//
-// Created by anabe on 28/0
-
 #ifndef FILA_H
 #define FILA_H
 
@@ -19,13 +16,13 @@ typedef struct Fila {
     NoFila* fim;
 } Fila;
 
-Fila criarFila();
+Fila* criarFila();
 
 void enfileirarReserva(Fila* fila, Reserva reserva);
 
 Reserva desenfileirarReserva(Fila* fila);
 
-int filaVazia(Fila fila);
+int filaVazia(Fila* fila);
 
 void exibirReservas(Fila* fila);
 
