@@ -158,47 +158,6 @@ void rotacaoEsquerda(Arvore *arvore) {
 
     arvore->raiz = novaRaiz;
 }
-void balancearArvore(Arvore *arvore) {
-
-    //verificar balanceamento
-    int fb = fatorBalanceamento(arvore);
-
-    if (fb > 1) {
-        //ramo da esquerda maior que direita
-
-        Arvore esq;
-        esq.raiz = arvore->raiz->esquerda;
-
-        int fbEsq = fatorBalanceamento(&esq);
-
-        if (fbEsq >= 0) {
-            // LL
-            rotacaoDireita(arvore);
-        } else {
-            // LR
-            rotacaoEsquerda(&esq);
-            arvore->raiz->esquerda = esq.raiz;
-            rotacaoDireita(arvore);
-        }
-    }
-    if (fb < -1) {
-        //ramo da direita maior que o da esquerda
-        Arvore dir;
-        dir.raiz = arvore->raiz->direita;
-
-        int fbDir = fatorBalanceamento(&dir);
-
-        if (fbDir <= 0) {
-            // RR
-            rotacaoEsquerda(arvore);
-        } else {
-            // RL
-            rotacaoDireita(&dir);
-            arvore->raiz->direita = dir.raiz;
-            rotacaoEsquerda(arvore);
-        }
-    }
-}
 void inserirLivroArvore ( Arvore * arvore , Livro * livro ) {
     if (arvore == NULL || livro == NULL) {
         printf("[Dados de livro ou arvore inválidos.]\n");
@@ -238,22 +197,63 @@ void inserirLivroArvore ( Arvore * arvore , Livro * livro ) {
 
         arvore->raiz->direita = noDir.raiz;
     }
-    balancearArvore(arvore);
+    //verificar balanceamento
+    int fb = fatorBalanceamento(arvore);
+
+    if (fb > 1) {
+        //ramo da esquerda maior que direita
+
+        Arvore esq;
+        esq.raiz = arvore->raiz->esquerda;
+
+        int fbEsq = fatorBalanceamento(&esq);
+
+        if (fbEsq >= 0) {
+            // LL
+            rotacaoDireita(arvore);
+        } else {
+            // LR
+            rotacaoEsquerda(&esq);
+            arvore->raiz->esquerda = esq.raiz;
+            rotacaoDireita(arvore);
+        }
+    }else if (fb < -1) {
+        //ramo da direita maior que o da esquerda
+        Arvore dir;
+        dir.raiz = arvore->raiz->direita;
+
+        int fbDir = fatorBalanceamento(&dir);
+
+        if (fbDir <= 0) {
+            // RR
+            rotacaoEsquerda(arvore);
+        } else {
+            // RL
+            rotacaoDireita(&dir);
+            arvore->raiz->direita = dir.raiz;
+            rotacaoEsquerda(arvore);
+        }
+    }
 
 }
 void removerLivroArvore(Arvore * arvore , Livro * livro) {
-    if (arvore == NULL) {
-        printf("[valor não encontrado.]\n");
+    if (arvore == NULL || arvore->raiz == NULL) {
+        printf("[livro nao encontrado!]\n");
         return;
     }
+
     if (livro->codigo < arvore->raiz->livro->codigo) {
         Arvore arvoreEsq;
         arvoreEsq.raiz = arvore->raiz->esquerda;
         removerLivroArvore(&arvoreEsq,livro);
+        arvore->raiz->esquerda = arvoreEsq.raiz;
+
     }else if (livro->codigo > arvore->raiz->livro->codigo) {
         Arvore arvoreDir;
         arvoreDir.raiz = arvore->raiz->direita;
         removerLivroArvore(&arvoreDir,livro);
+        arvore->raiz->direita = arvoreDir.raiz;
+
     }else {
         //encontrou o Nó
         //caso 1 Nó sem filhos
@@ -287,8 +287,44 @@ void removerLivroArvore(Arvore * arvore , Livro * livro) {
             dir.raiz = arvore->raiz->direita;
 
             removerLivroArvore(&dir, sucessor->raiz->livro);
-
             arvore->raiz->direita = dir.raiz;
+        }
+    }
+    //verificar balanceamento
+    int fb = fatorBalanceamento(arvore);
+
+    if (fb > 1) {
+        //ramo da esquerda maior que direita
+
+        Arvore esq;
+        esq.raiz = arvore->raiz->esquerda;
+
+        int fbEsq = fatorBalanceamento(&esq);
+
+        if (fbEsq >= 0) {
+            // LL
+            rotacaoDireita(arvore);
+        } else {
+            // LR
+            rotacaoEsquerda(&esq);
+            arvore->raiz->esquerda = esq.raiz;
+            rotacaoDireita(arvore);
+        }
+    }else if (fb < -1) {
+        //ramo da direita maior que o da esquerda
+        Arvore dir;
+        dir.raiz = arvore->raiz->direita;
+
+        int fbDir = fatorBalanceamento(&dir);
+
+        if (fbDir <= 0) {
+            // RR
+            rotacaoEsquerda(arvore);
+        } else {
+            // RL
+            rotacaoDireita(&dir);
+            arvore->raiz->direita = dir.raiz;
+            rotacaoEsquerda(arvore);
         }
     }
 }

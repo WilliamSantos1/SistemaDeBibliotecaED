@@ -26,7 +26,6 @@ int main(void) {
     }
     int quant = contarLivros(arvore);
     int altura = calcularAlturaArvore(arvore);
-    
     printf("\nquantidade de livros: %d \n", quant);
     printf("altura da arvore: %d \n", altura);
     printf("\nlivros em ordem\n");
@@ -35,7 +34,11 @@ int main(void) {
     listarLivrosPreOrdem(arvore);
     printf("\nlivros em pos-ordem\n");
     listarLivrosPosOrdem(arvore);
-
-
+    printf("\nlivros 2 removido\n");
+    removerLivroArvore(arvore,livro2);
+    printf("\nlivros 2 removido\n");
+    printf("\nlivros em pre-ordem\n");
+    listarLivrosPreOrdem(arvore);
+    removerLivroArvore(arvore,livro2);
     return 0;
 }
