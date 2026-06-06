@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include "arvore.c"
 #include "livro.c"
+#include "fila.c"
 #include <stdio.h>
+
 
 
 int main(void) {
@@ -40,5 +42,31 @@ int main(void) {
     printf("\nlivros em pre-ordem\n");
     listarLivrosPreOrdem(arvore);
     removerLivroArvore(arvore,livro2);
+
+    printf("\nTeste fila de reservas\n");
+
+    Fila* filaReservas = criarFila();
+
+    Reserva r1 = {"Beatriz Santos", 3};
+    Reserva r2 = {"Vitoria Rodrigues", 1};
+    Reserva r3 = {"William Silva", 3};
+
+    enfileirarReserva(filaReservas, r1);
+    enfileirarReserva(filaReservas, r2);
+    enfileirarReserva(filaReservas, r3);
+
+    exibirReservas(filaReservas);
+
+    Reserva removida = desenfileirarReserva(filaReservas);
+
+    if (removida.codigoLivro != -1) {
+        printf("\nReserva removida:\n");
+        printf("Usuario: %s | Codigo do livro: %d\n",
+               removida.nomeUsuario,
+               removida.codigoLivro);
+    }
+
+    exibirReservas(filaReservas);
+
     return 0;
 }
