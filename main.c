@@ -14,10 +14,10 @@ int main() {
     Historico *historico = NULL;
 
     inserirLivroArvore(arvore,
-        criarLivro(1,"Joaozinho Gamer","Johon",1999,5));
+        criarLivro(1,"Joaozinho Gamer","Johon",1999,1));
 
     inserirLivroArvore(arvore,
-        criarLivro(2,"Matematica","Carlos",2010,2));
+        criarLivro(2,"Matematica","Carlos",2010,1));
 
     inserirLivroArvore(arvore,
         criarLivro(3,"Portugues","Ana",2020,1));
