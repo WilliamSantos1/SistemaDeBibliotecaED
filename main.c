@@ -30,11 +30,15 @@ int main() {
         printf("\n SISTEMA BIBLIOTECA");
         printf("\n============================");
         printf("\n1 - Buscar livro");
-        printf("\n2 - Listar livros");
+        printf("\n2 - Listar livros em ordem");
         printf("\n3 - Emprestar livro");
         printf("\n4 - Devolver livro");
         printf("\n5 - Exibir reservas");
         printf("\n6 - Exibir historico");
+        printf("\n7 - Cadastrar livro");
+        printf("\n8 - Remover livro");
+        printf("\n9 - Listar livros em pre-ordem");
+        printf("\n10 - Listar livros em pos-ordem");
         printf("\n0 - Sair");
         printf("\nOpcao: ");
 
@@ -193,6 +197,73 @@ int main() {
                 printf(
                     "\nOpcao invalida!\n"
                 );
+            case 7: {
+
+                int codigo, ano, quantidade;
+                char titulo[100];
+                char autor[100];
+
+                printf("Codigo: ");
+                scanf("%d", &codigo);
+
+                printf("Titulo: ");
+                scanf(" %[^\n]", titulo);
+
+                printf("Autor: ");
+                scanf(" %[^\n]", autor);
+
+                printf("Ano: ");
+                scanf("%d", &ano);
+
+                printf("Quantidade: ");
+                scanf("%d", &quantidade);
+
+                Livro *novoLivro = criarLivro(
+                    codigo,
+                    titulo,
+                    autor,
+                    ano,
+                    quantidade
+                );
+
+                inserirLivroArvore(arvore, novoLivro);
+
+                printf("Livro cadastrado com sucesso!\n");
+
+                break;
+            }
+            case 8: {
+
+                int codigo;
+
+                printf("Codigo do livro: ");
+                scanf("%d", &codigo);
+
+                Livro *livro = buscarLivroArvore(arvore, codigo);
+
+                if (livro == NULL) {
+
+                    printf("Livro nao encontrado.\n");
+
+                } else {
+
+                    removerLivroArvore(arvore, livro);
+
+                    printf("Livro removido com sucesso.\n");
+                }
+
+                break;
+            }
+            case 9:
+
+                listarLivrosPreOrdem(arvore);
+
+                break;
+            case 10:
+
+                listarLivrosPosOrdem(arvore);
+
+                break;
         }
 
     } while(opcao != 0);
