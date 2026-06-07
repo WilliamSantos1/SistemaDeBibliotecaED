@@ -15,6 +15,7 @@ Livro * criarLivro ( int codigo , char titulo [] , char autor [] ,int ano , int 
     strcpy(livro->autor, autor);
     livro -> ano = ano;
     livro -> quantidadeTotal = quantidadeTotal;
+    livro->quantidadeDisponivel = quantidadeTotal;
     printf("[livro criado com sucesso!]\n");
     return livro;
 }

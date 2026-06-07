@@ -3,4 +3,6 @@ project(Sistema_de_Biblioteca_ED C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(Sistema_de_Biblioteca_ED main.c)
+add_executable(Sistema_de_Biblioteca_ED main.c
+        lista.h
+        lista.c)

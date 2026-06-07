@@ -76,7 +76,7 @@ Reserva desenfileirarReserva(Fila* fila) {
 
 void exibirReservas(Fila* fila) {
     if (filaVazia(fila)) {
-        printf("Não há reservas registradas no momento.\n");
+        printf("Nao ha reservas registradas no momento.\n");
         return;
     }
 
