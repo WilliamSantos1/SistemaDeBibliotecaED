@@ -149,6 +149,11 @@ int main() {
                     break;
                 }
 
+                if (livro->quantidadeDisponivel == livro->quantidadeTotal) {
+                    printf("\nErro: este livro nao esta emprestado.\n");
+                    break;
+                }
+
                 devolverExemplar(livro);
 
                 printf(
