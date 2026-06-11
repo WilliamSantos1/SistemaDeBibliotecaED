@@ -15,7 +15,6 @@ Arvore * criarArvore() {
 
 Livro * buscarLivroArvore ( Arvore * arvore , int codigo ) {
     if (arvore->raiz == NULL) {
-        printf("[livro nao existente ou arvore vazia.]\n");
         return NULL;
     }
     if (arvore->raiz->livro->codigo == codigo) {
@@ -160,7 +159,7 @@ void rotacaoEsquerda(Arvore *arvore) {
 }
 void inserirLivroArvore ( Arvore * arvore , Livro * livro ) {
     if (arvore == NULL || livro == NULL) {
-        printf("[Dados de livro ou arvore inválidos.]\n");
+        printf("\n[Dados de livro ou arvore invalidos.]\n");
         return;
     }
 
@@ -168,7 +167,7 @@ void inserirLivroArvore ( Arvore * arvore , Livro * livro ) {
         NoArvore *novo = malloc(sizeof(NoArvore));
 
         if (novo == NULL) {
-            printf("[Erro ao alocar memória.]\n");
+            printf("\n[Erro ao alocar memoria.]\n");
             return;
         }
 

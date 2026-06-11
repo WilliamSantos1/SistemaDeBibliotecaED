@@ -14,7 +14,7 @@ int main() {
     Historico *historico = NULL;
 
     inserirLivroArvore(arvore,
-        criarLivro(1,"Joaozinho Gamer","Johon",1999,1));
+        criarLivro(1,"Historia","Johon",1999,1));
 
     inserirLivroArvore(arvore,
         criarLivro(2,"Matematica","Carlos",2010,1));
@@ -43,7 +43,7 @@ int main() {
         printf("\nOpcao: ");
 
         scanf("%d",&opcao);
-
+        printf("\n");
         switch(opcao) {
 
             case 1: {
@@ -56,9 +56,11 @@ int main() {
                 Livro *livro =
                     buscarLivroArvore(arvore,codigo);
 
-                if(livro != NULL)
+                if(livro != NULL) {
                     exibirLivro(livro);
-
+                }else {
+                    printf("\n[livro nao existente ou arvore vazia.]\n");
+                }
                 break;
             }
 
@@ -83,11 +85,12 @@ int main() {
                     buscarLivroArvore(arvore,codigo);
 
                 if(livro == NULL) {
-                    printf("Livro nao encontrado.\n");
+                    printf("\n[Livro nao encontrado.]\n");
                     break;
                 }
+                int quantidade = obterQuantidadeDisponivel(livro);
 
-                if(livro->quantidadeDisponivel > 0) {
+                if(quantidade > 0) {
 
                     emprestarExemplar(livro);
 
@@ -120,11 +123,11 @@ int main() {
                     );
 
                     printf(
-                        "\nLivro indisponivel.\n"
+                        "\n[Livro indisponivel.]\n"
                     );
 
                     printf(
-                        "Usuario adicionado na fila.\n"
+                        "\n[Usuario adicionado na fila].\n"
                     );
                 }
 
@@ -142,14 +145,14 @@ int main() {
                     buscarLivroArvore(arvore,codigo);
 
                 if(livro == NULL) {
-                    printf("Livro nao encontrado.\n");
+                    printf("\n[Livro nao encontrado.]\n");
                     break;
                 }
 
                 devolverExemplar(livro);
 
                 printf(
-                    "\nLivro devolvido com sucesso!\n"
+                    "\n[Livro devolvido com sucesso!]\n"
                 );
 
                 if(!filaVazia(filaReservas)) {
@@ -160,7 +163,7 @@ int main() {
                         );
 
                     printf(
-                        "\nReserva liberada para: %s\n",
+                        "\n[Reserva liberada para: %s]\n",
                         proximo.nomeUsuario
                     );
                 }
@@ -187,16 +190,11 @@ int main() {
             case 0:
 
                 printf(
-                    "\nEncerrando sistema...\n"
+                    "\n[Encerrando sistema...]\n"
                 );
 
                 break;
 
-            default:
-
-                printf(
-                    "\nOpcao invalida!\n"
-                );
             case 7: {
 
                 int codigo, ano, quantidade;
@@ -205,6 +203,20 @@ int main() {
 
                 printf("Codigo: ");
                 scanf("%d", &codigo);
+
+                Livro * livro = buscarLivroArvore(arvore,codigo);
+               if (livro != NULL) {
+                   do {
+                       if (codigo <=0) {
+                           printf("\n[Digite um codigo valido]\n");
+                       }else {
+                           printf("\n[Codigo de livro ja existente, digite outro valor]\n");
+                       }
+                       printf("Codigo: ");
+                       scanf("%d", &codigo);
+                       livro = buscarLivroArvore(arvore,codigo);
+                   }while (livro != NULL || codigo <= 0);
+               }
 
                 printf("Titulo: ");
                 scanf(" %[^\n]", titulo);
@@ -228,8 +240,6 @@ int main() {
 
                 inserirLivroArvore(arvore, novoLivro);
 
-                printf("Livro cadastrado com sucesso!\n");
-
                 break;
             }
             case 8: {
@@ -242,14 +252,10 @@ int main() {
                 Livro *livro = buscarLivroArvore(arvore, codigo);
 
                 if (livro == NULL) {
-
-                    printf("Livro nao encontrado.\n");
-
+                    printf("\n[Livro nao encontrado.]\n");
                 } else {
 
                     removerLivroArvore(arvore, livro);
-
-                    printf("Livro removido com sucesso.\n");
                 }
 
                 break;
@@ -263,6 +269,13 @@ int main() {
 
                 listarLivrosPosOrdem(arvore);
 
+                break;
+
+            default:
+
+                printf(
+                    "\n[Opcao invalida!]\n"
+                );
                 break;
         }
 

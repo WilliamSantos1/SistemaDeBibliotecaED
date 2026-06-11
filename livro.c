@@ -16,14 +16,8 @@ Livro * criarLivro ( int codigo , char titulo [] , char autor [] ,int ano , int 
     livro -> ano = ano;
     livro -> quantidadeTotal = quantidadeTotal;
     livro->quantidadeDisponivel = quantidadeTotal;
-    printf("[livro criado com sucesso!]\n");
+    printf("\n[livro criado com sucesso!]\n");
     return livro;
-}
-
-void exibirLivro ( Livro * livro ) {
-    printf("|Titulo: %s\n", livro -> titulo);
-    printf("|Autor: %s\n", livro -> autor);
-    printf("|Ano: %d\n", livro -> ano);
 }
 
 int obterCodigoLivro ( Livro * livro ) {
@@ -41,4 +35,10 @@ void emprestarExemplar ( Livro * livro ) {
 }
 void devolverExemplar ( Livro * livro ) {
     livro -> quantidadeDisponivel++;
+}
+void exibirLivro ( Livro * livro ) {
+    printf("\n|Titulo: %s\n", livro -> titulo);
+    printf("|Autor: %s\n", livro -> autor);
+    printf("|Ano: %d\n", livro -> ano);
+    printf("|quantidade: %d\n", obterQuantidadeDisponivel(livro));
 }
