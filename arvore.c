@@ -58,7 +58,6 @@ void listarLivrosEmOrdem ( Arvore * arvore ) {
         listarLivrosEmOrdem(&noDir);
     }
 }
-
 void listarLivrosPreOrdem ( Arvore * arvore ) {
     if (arvore->raiz != NULL) {
         //nó do meio
@@ -326,4 +325,72 @@ void removerLivroArvore(Arvore * arvore , Livro * livro) {
             rotacaoEsquerda(arvore);
         }
     }
+}
+
+void imprimirNivel(NoArvore *raiz, int nivel, int base, int altura) {
+
+    if (raiz == NULL) {
+        //se altura par ou inpar é igual a base
+         if (altura -1 == base && altura % 2 != 0 ||
+             altura/2 == base && altura % 2 == 0) {
+            //esta na base
+            printf("[ ] ");
+            }else {
+                for (int i = 0; i<base; i++) {
+                    printf(" ");
+                }
+            }
+        return;
+        }
+
+    if (nivel == 0) {
+        if (altura -1 != base) {
+            for (int i = 0; i<base; i++) {
+                printf(" ");
+            }
+            printf("[%d]", raiz->livro->codigo);
+        }else {
+            printf("[%d] ", raiz->livro->codigo);
+        }
+        return;
+    }
+
+    imprimirNivel(raiz->esquerda, nivel - 1, base/2, altura);
+    imprimirNivel(raiz->direita, nivel - 1, base/2, altura);
+}
+
+
+void imprimirArvore(Arvore * arvore) {
+    if (arvore->raiz == NULL) {
+        return;
+    }
+    int altura = calcularAlturaArvore(arvore);
+
+    //calculando a largura da base para definir o espaçamento entre níveis
+    int larguraBase = 2;
+    for (int w = altura; w > 0;w--) {
+        larguraBase = larguraBase*2;
+    }
+
+    for (int i = 0; i < larguraBase*2; i++) {
+        printf("=");
+    }
+    printf("\n");
+    printf("Arvore de Livros\n");
+    for (int i = 0; i < larguraBase*2; i++) {
+        printf("-");
+    }
+    printf("\n");
+    //imprimindo arvore nível por nível
+    for (int i = 0; i < altura + 1; i++) {
+       imprimirNivel(arvore->raiz,i,larguraBase, altura);
+        printf("\n");
+    }
+
+    printf("\n");
+    for (int i = 0; i < larguraBase*2; i++) {
+        printf("-");
+    }
+
+
 }

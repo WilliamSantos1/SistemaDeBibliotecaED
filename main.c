@@ -20,8 +20,17 @@ int main() {
         criarLivro(2,"Matematica","Carlos",2010,1));
 
     inserirLivroArvore(arvore,
-        criarLivro(3,"Portugues","Ana",2020,1));
-
+        criarLivro(3,"Portugues","Ana",2026,4));
+    inserirLivroArvore(arvore,
+        criarLivro(4,"Sociologia","Paulo",2011,1));
+    inserirLivroArvore(arvore,
+        criarLivro(5,"Quimica","Andre",2023,5));
+    inserirLivroArvore(arvore,
+        criarLivro(6,"Programacao","Luiz",2012,1));
+    inserirLivroArvore(arvore,
+       criarLivro(8,"Biologia","Eduardo",2014,1));
+    inserirLivroArvore(arvore,
+      criarLivro(7,"Fisica","Caio",2017,2));
     int opcao;
 
     do {
@@ -30,15 +39,16 @@ int main() {
         printf("\n SISTEMA BIBLIOTECA");
         printf("\n============================");
         printf("\n1 - Buscar livro");
-        printf("\n2 - Listar livros em ordem");
-        printf("\n3 - Emprestar livro");
-        printf("\n4 - Devolver livro");
-        printf("\n5 - Exibir reservas");
-        printf("\n6 - Exibir historico");
-        printf("\n7 - Cadastrar livro");
-        printf("\n8 - Remover livro");
+        printf("\n2 - Cadastrar livro");
+        printf("\n3 - Remover livro");
+        printf("\n4 - Emprestar livro");
+        printf("\n5 - Devolver livro");
+        printf("\n6 - Exibir reservas");
+        printf("\n7 - Exibir historico");
+        printf("\n8 - Listar livros em ordem");
         printf("\n9 - Listar livros em pre-ordem");
         printf("\n10 - Listar livros em pos-ordem");
+        printf("\n11 - Exibicao visual da arvore");
         printf("\n0 - Sair");
         printf("\nOpcao: ");
 
@@ -63,14 +73,73 @@ int main() {
                 }
                 break;
             }
+            case 2: {
 
-            case 2:
+                int codigo, ano, quantidade;
+                char titulo[100];
+                char autor[100];
 
-                listarLivrosEmOrdem(arvore);
+                printf("Codigo: ");
+                scanf("%d", &codigo);
+
+                Livro * livro = buscarLivroArvore(arvore,codigo);
+                if (livro != NULL) {
+                    do {
+                        if (codigo <=0) {
+                            printf("\n[Digite um codigo valido]\n");
+                        }else {
+                            printf("\n[Codigo de livro ja existente, digite outro valor]\n");
+                        }
+                        printf("Codigo: ");
+                        scanf("%d", &codigo);
+                        livro = buscarLivroArvore(arvore,codigo);
+                    }while (livro != NULL || codigo <= 0);
+                }
+
+                printf("Titulo: ");
+                scanf(" %[^\n]", titulo);
+
+                printf("Autor: ");
+                scanf(" %[^\n]", autor);
+
+                printf("Ano: ");
+                scanf("%d", &ano);
+
+                printf("Quantidade: ");
+                scanf("%d", &quantidade);
+
+                Livro *novoLivro = criarLivro(
+                    codigo,
+                    titulo,
+                    autor,
+                    ano,
+                    quantidade
+                );
+
+                inserirLivroArvore(arvore, novoLivro);
 
                 break;
-
+            }
             case 3: {
+
+                int codigo;
+
+                printf("Codigo do livro: ");
+                scanf("%d", &codigo);
+
+                Livro *livro = buscarLivroArvore(arvore, codigo);
+
+                if (livro == NULL) {
+                    printf("\n[Livro nao encontrado.]\n");
+                } else {
+
+                    removerLivroArvore(arvore, livro);
+                }
+
+                break;
+            }
+
+            case 4: {
 
                 int codigo;
                 char usuario[100];
@@ -134,15 +203,14 @@ int main() {
                 break;
             }
 
-            case 4: {
+            case 5: {
 
                 int codigo;
 
                 printf("Codigo do livro: ");
                 scanf("%d",&codigo);
 
-                Livro *livro =
-                    buscarLivroArvore(arvore,codigo);
+                Livro *livro = buscarLivroArvore(arvore,codigo);
 
                 if(livro == NULL) {
                     printf("\n[Livro nao encontrado.]\n");
@@ -150,7 +218,7 @@ int main() {
                 }
 
                 if (livro->quantidadeDisponivel == livro->quantidadeTotal) {
-                    printf("\nErro: este livro nao esta emprestado.\n");
+                    printf("\n[Erro: este livro nao esta emprestado.]\n");
                     break;
                 }
 
@@ -176,7 +244,7 @@ int main() {
                 break;
             }
 
-            case 5:
+            case 6:
 
                 exibirReservas(
                     filaReservas
@@ -184,7 +252,7 @@ int main() {
 
                 break;
 
-            case 6:
+            case 7:
 
                 listarHistorico(
                     historico
@@ -192,79 +260,12 @@ int main() {
 
                 break;
 
-            case 0:
+            case 8:
 
-                printf(
-                    "\n[Encerrando sistema...]\n"
-                );
+                listarLivrosEmOrdem(arvore);
 
                 break;
 
-            case 7: {
-
-                int codigo, ano, quantidade;
-                char titulo[100];
-                char autor[100];
-
-                printf("Codigo: ");
-                scanf("%d", &codigo);
-
-                Livro * livro = buscarLivroArvore(arvore,codigo);
-               if (livro != NULL) {
-                   do {
-                       if (codigo <=0) {
-                           printf("\n[Digite um codigo valido]\n");
-                       }else {
-                           printf("\n[Codigo de livro ja existente, digite outro valor]\n");
-                       }
-                       printf("Codigo: ");
-                       scanf("%d", &codigo);
-                       livro = buscarLivroArvore(arvore,codigo);
-                   }while (livro != NULL || codigo <= 0);
-               }
-
-                printf("Titulo: ");
-                scanf(" %[^\n]", titulo);
-
-                printf("Autor: ");
-                scanf(" %[^\n]", autor);
-
-                printf("Ano: ");
-                scanf("%d", &ano);
-
-                printf("Quantidade: ");
-                scanf("%d", &quantidade);
-
-                Livro *novoLivro = criarLivro(
-                    codigo,
-                    titulo,
-                    autor,
-                    ano,
-                    quantidade
-                );
-
-                inserirLivroArvore(arvore, novoLivro);
-
-                break;
-            }
-            case 8: {
-
-                int codigo;
-
-                printf("Codigo do livro: ");
-                scanf("%d", &codigo);
-
-                Livro *livro = buscarLivroArvore(arvore, codigo);
-
-                if (livro == NULL) {
-                    printf("\n[Livro nao encontrado.]\n");
-                } else {
-
-                    removerLivroArvore(arvore, livro);
-                }
-
-                break;
-            }
             case 9:
 
                 listarLivrosPreOrdem(arvore);
@@ -273,6 +274,17 @@ int main() {
             case 10:
 
                 listarLivrosPosOrdem(arvore);
+
+                break;
+            case 11:
+                imprimirArvore(arvore);
+                break;
+
+            case 0:
+
+                printf(
+                    "\n[Encerrando sistema...]\n"
+                );
 
                 break;
 
