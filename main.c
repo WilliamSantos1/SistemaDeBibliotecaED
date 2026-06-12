@@ -61,7 +61,12 @@ int main() {
                 int codigo;
 
                 printf("Codigo do livro: ");
-                scanf("%d",&codigo);
+
+                if (scanf("%d", &codigo) != 1) {
+                    printf("\n[Erro: Codigo do livro invalido.]\n");
+                    while (getchar() != '\n');
+                    break;
+                }
 
                 Livro *livro =
                     buscarLivroArvore(arvore,codigo);
@@ -125,7 +130,12 @@ int main() {
                 int codigo;
 
                 printf("Codigo do livro: ");
-                scanf("%d", &codigo);
+
+                if (scanf("%d", &codigo) != 1) {
+                    printf("\n[Erro: Codigo do livro invalido.]\n");
+                    while (getchar() != '\n');
+                    break;
+                }
 
                 Livro *livro = buscarLivroArvore(arvore, codigo);
 
@@ -145,7 +155,12 @@ int main() {
                 char usuario[100];
 
                 printf("Codigo do livro: ");
-                scanf("%d",&codigo);
+
+                if (scanf("%d", &codigo) != 1) {
+                    printf("\n[Erro: Codigo do livro invalido.]\n");
+                    while (getchar() != '\n');
+                    break;
+                }
 
                 printf("Nome do usuario: ");
                 scanf(" %[^\n]",usuario);
@@ -208,7 +223,12 @@ int main() {
                 int codigo;
 
                 printf("Codigo do livro: ");
-                scanf("%d",&codigo);
+
+                if (scanf("%d", &codigo) != 1) {
+                    printf("\n[Erro: Codigo do livro invalido.]\n");
+                    while (getchar() != '\n');
+                    break;
+                }
 
                 Livro *livro = buscarLivroArvore(arvore,codigo);
 
@@ -228,17 +248,42 @@ int main() {
                     "\n[Livro devolvido com sucesso!]\n"
                 );
 
-                if(!filaVazia(filaReservas)) {
+                if (!filaVazia(filaReservas)) {
 
-                    Reserva proximo =
-                        desenfileirarReserva(
-                            filaReservas
+                    NoFila* atual = filaReservas->inicio;
+                    NoFila* anterior = NULL;
+
+                    while (atual != NULL && atual->reserva.codigoLivro != codigo) {
+                        anterior = atual;
+                        atual = atual->proximo;
+                    }
+
+                    if (atual != NULL) {
+
+                        Reserva proximo = atual->reserva;
+
+                        if (anterior == NULL) {
+                            filaReservas->inicio = atual->proximo;
+                        } else {
+                            anterior->proximo = atual->proximo;
+                        }
+
+                        if (atual == filaReservas->fim) {
+                            filaReservas->fim = anterior;
+                        }
+
+                        free(atual);
+
+                        emprestarExemplar(livro);
+
+                        printf(
+                            "\n[Reserva liberada para: %s]\n",
+                            proximo.nomeUsuario
                         );
 
-                    printf(
-                        "\n[Reserva liberada para: %s]\n",
-                        proximo.nomeUsuario
-                    );
+                    } else {
+                        printf("\n[Nenhuma reserva encontrada para este livro.]\n");
+                    }
                 }
 
                 break;
