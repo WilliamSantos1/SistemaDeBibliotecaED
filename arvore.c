@@ -359,7 +359,6 @@ void imprimirNivel(NoArvore *raiz, int nivel, int base, int altura) {
     imprimirNivel(raiz->direita, nivel - 1, base/2, altura);
 }
 
-
 void imprimirArvore(Arvore * arvore) {
     if (arvore->raiz == NULL) {
         return;
@@ -393,4 +392,15 @@ void imprimirArvore(Arvore * arvore) {
     }
 
 
+}
+
+void liberarArvore(NoArvore *no) {
+    if (no == NULL)
+        return;
+
+    liberarArvore(no->esquerda);
+    liberarArvore(no->direita);
+
+    free(no->livro);
+    free(no);
 }
