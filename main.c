@@ -219,8 +219,9 @@ int main() {
             }
 
             case 5: {
-
                 int codigo;
+                Fila *filaAux = NULL;
+                int resAtendida = 0;
 
                 printf("Codigo do livro: ");
 
@@ -230,9 +231,9 @@ int main() {
                     break;
                 }
 
-                Livro *livro = buscarLivroArvore(arvore,codigo);
+                Livro *livro = buscarLivroArvore(arvore, codigo);
 
-                if(livro == NULL) {
+                if (livro == NULL) {
                     printf("\n[Livro nao encontrado.]\n");
                     break;
                 }
@@ -244,44 +245,43 @@ int main() {
 
                 devolverExemplar(livro);
 
-                printf(
-                    "\n[Livro devolvido com sucesso!]\n"
-                );
+                printf("\n[Livro devolvido com sucesso!]\n");
 
                 if (!filaVazia(filaReservas)) {
 
-                    NoFila* atual = filaReservas->inicio;
-                    NoFila* anterior = NULL;
+                    // Uso de fila auxiliar para localizar a reserva correta
+                    filaAux = criarFila();
 
-                    while (atual != NULL && atual->reserva.codigoLivro != codigo) {
-                        anterior = atual;
-                        atual = atual->proximo;
+                    if (filaAux == NULL) {
+                        printf("\n[Erro ao criar fila auxiliar.]\n");
+                        break;
                     }
 
-                    if (atual != NULL) {
+                    while (!filaVazia(filaReservas)) {
+                        Reserva resAtual = desenfileirarReserva(filaReservas);
 
-                        Reserva proximo = atual->reserva;
+                        if (resAtual.codigoLivro == codigo && resAtendida == 0) {
+                            emprestarExemplar(livro);
 
-                        if (anterior == NULL) {
-                            filaReservas->inicio = atual->proximo;
+                            printf(
+                                "\n[Reserva liberada para: %s]\n",
+                                resAtual.nomeUsuario
+                            );
+
+                            resAtendida = 1;
                         } else {
-                            anterior->proximo = atual->proximo;
+                            enfileirarReserva(filaAux, resAtual);
                         }
+                    }
 
-                        if (atual == filaReservas->fim) {
-                            filaReservas->fim = anterior;
-                        }
+                    while (!filaVazia(filaAux)) {
+                        Reserva resVolta = desenfileirarReserva(filaAux);
+                        enfileirarReserva(filaReservas, resVolta);
+                    }
 
-                        free(atual);
+                    free(filaAux);
 
-                        emprestarExemplar(livro);
-
-                        printf(
-                            "\n[Reserva liberada para: %s]\n",
-                            proximo.nomeUsuario
-                        );
-
-                    } else {
+                    if (resAtendida == 0) {
                         printf("\n[Nenhuma reserva encontrada para este livro.]\n");
                     }
                 }
