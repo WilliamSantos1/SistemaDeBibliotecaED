@@ -343,6 +343,12 @@ int main() {
 
     } while(opcao != 0);
 
+    while (!filaVazia(filaReservas)) {
+        desenfileirarReserva(filaReservas);
+    }
+
+    free(filaReservas);
+
     liberarHistorico(historico);
     liberarArvore(arvore->raiz);
     return 0;
