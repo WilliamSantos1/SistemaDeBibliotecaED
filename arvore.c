@@ -361,6 +361,7 @@ void imprimirNivel(NoArvore *raiz, int nivel, int base, int altura) {
 
 void imprimirArvore(Arvore * arvore) {
     if (arvore->raiz == NULL) {
+        printf("\n[Arvore vazia!]\n");
         return;
     }
     int altura = calcularAlturaArvore(arvore);
@@ -371,25 +372,15 @@ void imprimirArvore(Arvore * arvore) {
         larguraBase = larguraBase*2;
     }
 
-    for (int i = 0; i < larguraBase*2; i++) {
-        printf("=");
-    }
-    printf("\n");
+    printf("\n===============================\n");
     printf("Arvore de Livros\n");
-    for (int i = 0; i < larguraBase*2; i++) {
-        printf("-");
-    }
-    printf("\n");
+    printf("\n-------------------------------\n");
     //imprimindo arvore nível por nível
     for (int i = 0; i < altura + 1; i++) {
-       imprimirNivel(arvore->raiz,i,larguraBase, altura);
+        imprimirNivel(arvore->raiz,i,larguraBase, altura);
         printf("\n");
     }
-
-    printf("\n");
-    for (int i = 0; i < larguraBase*2; i++) {
-        printf("-");
-    }
+    printf("\n-------------------------------");
 
 
 }

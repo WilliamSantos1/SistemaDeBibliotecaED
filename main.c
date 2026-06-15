@@ -323,6 +323,9 @@ int main() {
                 break;
             case 11:
                 imprimirArvore(arvore);
+                printf("\nAltura da arvore: %d",calcularAlturaArvore(arvore));
+                printf("\nQuantidade de livros: %d\n",contarLivros(arvore));
+                printf("\n-------------------------------\n");
                 break;
 
             case 0:
