@@ -306,18 +306,21 @@ int main() {
                 break;
 
             case 8:
-
+                printf("\nLivros em ordem:\n");
+                printf("-------------------------------\n");
                 listarLivrosEmOrdem(arvore);
 
                 break;
 
             case 9:
-
+                printf("\nLivros em pre-ordem:\n");
+                printf("-------------------------------\n");
                 listarLivrosPreOrdem(arvore);
 
                 break;
             case 10:
-
+                printf("\nLivros em pos-ordem:\n");
+                printf("-------------------------------\n");
                 listarLivrosPosOrdem(arvore);
 
                 break;
